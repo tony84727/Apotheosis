@@ -44,7 +44,11 @@ public class PotionCharmItem extends Item {
 		if (!hasPotion(stack)) return;
 		if (stack.getOrCreateTag().getBoolean("charm_enabled") && entity instanceof ServerPlayerEntity) {
 			Potion p = PotionUtils.getPotionFromItem(stack);
-			EffectInstance contained = p.getEffects().get(0);
+			List<EffectInstance> effects = p.getEffects();
+			if (effects.isEmpty()) {
+				return;
+			}
+			EffectInstance contained = effects.get(0);
 			EffectInstance active = ((ServerPlayerEntity) entity).getActivePotionEffect(contained.getPotion());
 			if (active == null || active.getDuration() < (active.getPotion() == Effects.NIGHT_VISION ? 210 : 5)) {
 				int durationOffset = (contained.getPotion() == Effects.NIGHT_VISION ? 210 : 5);
